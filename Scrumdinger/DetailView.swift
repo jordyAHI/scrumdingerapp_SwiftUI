@@ -24,28 +24,28 @@ struct DetailView: View {
                 HStack {
                     Label("Length", systemImage: "clock")
                     Spacer()
-                    Text("\(scrumVM.scrum.lengthInMinutes) minutes")
+                    Text("\(scrumVM.data.lengthInMinutes) minutes")
                 }
                 .accessibilityElement(children: .combine)
                 HStack {
                     Label("Theme", systemImage: "paintpalette")
                     Spacer()
-                    Text(scrumVM.scrum.theme.name)
+                    Text(scrumVM.data.theme.name)
                         .padding(4)
-                        .foregroundColor(scrumVM.scrum.theme.accentColor)
-                        .background(scrumVM.scrum.theme.mainColor)
+                        .foregroundColor(scrumVM.data.theme.accentColor)
+                        .background(scrumVM.data.theme.mainColor)
                         .cornerRadius(4)
                 }
                 .accessibilityElement(children: .combine)
                 HStack {
                     Label("Ironman Suit", systemImage: "bonjour")
                     Spacer()
-                    Text(scrumVM.scrum.ironSuit.name)
+                    Text(scrumVM.data.ironSuit.name)
                         .fontWeight(Font.Weight.semibold)
                         .padding(4)
                         .textCase(.uppercase)
-                        .foregroundColor(scrumVM.scrum.ironSuit.accentColor)
-                        .background(scrumVM.scrum.theme.mainColor)
+                        .foregroundColor(scrumVM.data.ironSuit.accentColor)
+                        .background(scrumVM.data.theme.mainColor)
                         .cornerRadius(4)
                 }
                 .accessibilityElement(children: .combine)
@@ -65,7 +65,7 @@ struct DetailView: View {
         .sheet(isPresented: $isPresentingEditView) {
             NavigationView {
                 DetailEditView(scrumVM: scrumVM)
-                    .navigationTitle(scrumVM.scrum.title)
+                    .navigationTitle(scrumVM.data.title)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Cancel") {
