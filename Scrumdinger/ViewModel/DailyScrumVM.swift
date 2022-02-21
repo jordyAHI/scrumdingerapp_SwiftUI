@@ -9,20 +9,15 @@ import Foundation
 import SwiftUI
 
 class DailyScrumVM: ObservableObject {
-     var scrum: Binding<DailyScrum>
-    @State private var data : DailyScrum.Data
-    
-    init(scrum: Binding<DailyScrum>) {
-       data = DailyScrum.Data()
-        self.scrum = scrum
-    }
+    @Published var data = DailyScrum.Data()
+    @Published var scrum = DailyScrum()
     
     func createAttendee(newAttendeeName: String) {
         let attendee = DailyScrum.Attendee(name: newAttendeeName)
-        self.data.attendees.append(attendee)
+        data.attendees.append(attendee)
     }
     
-    func updateDailyScrum(data: DailyScrum.Data) {
-        
+    func updateDailyScrum() {
+        scrum.update(from: scrum.data)
     }
 }

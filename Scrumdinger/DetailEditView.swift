@@ -9,8 +9,6 @@ import SwiftUI
 
 struct DetailEditView: View {
     // State variable -
-    @Binding var scrum: DailyScrum
-    @Binding var data: DailyScrum.Data
     @State private var newAttendeeName = ""
     @ObservedObject var scrumVM : DailyScrumVM
     
@@ -19,34 +17,32 @@ struct DetailEditView: View {
             Section(header: Text("Meeting Info")) {
                 // $data.title is binding to the data property declared above, this way we
                 // Can override the .title property
-                TextField("Title", text: $data.title)
+                TextField("Title", text: $scrumVM.data.title)
                 HStack {
-                    Slider(value: $data.lengthInMinutes, in: 1...60, step: 1) {
+                    Slider(value: $scrumVM.data.lengthInMinutes, in: 1...60, step: 1) {
                        Text("Length")
                    }
-                    .accessibilityValue("\(Int(data.lengthInMinutes)) minutes")
-                    .accentColor(data.theme.mainColor)
+                    .accessibilityValue("\(Int(scrumVM.data.lengthInMinutes)) minutes")
+                    .accentColor(scrumVM.data.theme.mainColor)
                     Spacer()
-                    Text("\(Int(data.lengthInMinutes)) minutes")
+                    Text("\(Int(scrumVM.data.lengthInMinutes)) minutes")
                         .accessibilityHidden(true)
                }
-                ThemePicker(selection: $data.theme)
-                IronSuitPicker(selection: $data.ironSuit)
+                ThemePicker(selection: $scrumVM.data.theme)
+                IronSuitPicker(selection: $scrumVM.data.ironSuit)
             }
             Section(header: Text("Attendees")) {
-                ForEach(data.attendees) { attendee in
+                ForEach(scrumVM.data.attendees) { attendee in
                         Text(attendee.name)
                     }
                     .onDelete { indices in
-                        data.attendees.remove(atOffsets: indices)
+                        scrumVM.data.attendees.remove(atOffsets: indices)
                     }
                 HStack {
                    TextField("New Attendee", text: $newAttendeeName)
                     Button(action: {
                        withAnimation {
                            scrumVM.createAttendee(newAttendeeName: newAttendeeName)
-                           //let attendee = DailyScrum.Attendee(name: newAttendeeName)
-                           //data.attendees.append(attendee)
                            newAttendeeName = ""
                        }
                    }) {

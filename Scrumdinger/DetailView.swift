@@ -5,16 +5,18 @@ See LICENSE folder for this sample’s licensing information.
 import SwiftUI
 
 struct DetailView: View {
-    @Binding var scrum: DailyScrum
-    
-    @State private var data = DailyScrum.Data()
     @State private var isPresentingEditView = false
-    @ObservedObject var scrumVM : DailyScrumVM
+    @ObservedObject var scrumVM = DailyScrumVM()
+    
+    init(scrum: DailyScrum) {
+        self.scrumVM.scrum = scrum
+        self.scrumVM.data = scrum.data
+    }
     
     var body: some View {
         List {
             Section(header: Text("Meeting Info")) {
-                NavigationLink(destination: MeetingView(scrum: $scrum)) {
+                NavigationLink(destination: MeetingView(scrum: $scrumVM.scrum)) {
                     Label("Start Meeting", systemImage: "timer")
                         .font(.headline)
                         .foregroundColor(.accentColor)
@@ -22,49 +24,48 @@ struct DetailView: View {
                 HStack {
                     Label("Length", systemImage: "clock")
                     Spacer()
-                    Text("\(scrum.lengthInMinutes) minutes")
+                    Text("\(scrumVM.scrum.lengthInMinutes) minutes")
                 }
                 .accessibilityElement(children: .combine)
                 HStack {
                     Label("Theme", systemImage: "paintpalette")
                     Spacer()
-                    Text(scrum.theme.name)
+                    Text(scrumVM.scrum.theme.name)
                         .padding(4)
-                        .foregroundColor(scrum.theme.accentColor)
-                        .background(scrum.theme.mainColor)
+                        .foregroundColor(scrumVM.scrum.theme.accentColor)
+                        .background(scrumVM.scrum.theme.mainColor)
                         .cornerRadius(4)
                 }
                 .accessibilityElement(children: .combine)
                 HStack {
                     Label("Ironman Suit", systemImage: "bonjour")
                     Spacer()
-                    Text(scrum.ironSuit.name)
+                    Text(scrumVM.scrum.ironSuit.name)
                         .fontWeight(Font.Weight.semibold)
                         .padding(4)
                         .textCase(.uppercase)
-                        .foregroundColor(scrum.ironSuit.accentColor)
-                        .background(scrum.theme.mainColor)
+                        .foregroundColor(scrumVM.scrum.ironSuit.accentColor)
+                        .background(scrumVM.scrum.theme.mainColor)
                         .cornerRadius(4)
                 }
                 .accessibilityElement(children: .combine)
             }
             Section(header: Text("Attendees")) {
-                ForEach(scrum.attendees) { attendee in
+                ForEach(scrumVM.data.attendees) { attendee in
                     Label(attendee.name, systemImage: "person")
                 }
             }
         }
-        .navigationTitle(scrum.title)
+        .navigationTitle(scrumVM.scrum.title)
         .toolbar {
             Button("Edit") {
                 isPresentingEditView = true
-                data = scrum.data
             }
         }
         .sheet(isPresented: $isPresentingEditView) {
             NavigationView {
-                DetailEditView(scrum: $scrum, data: $data, scrumVM: scrumVM)
-                    .navigationTitle(scrum.title)
+                DetailEditView(scrumVM: scrumVM)
+                    .navigationTitle(scrumVM.scrum.title)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Cancel") {
@@ -74,7 +75,7 @@ struct DetailView: View {
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Done") {
                                 isPresentingEditView = false
-                                scrum.update(from: data)
+                                scrumVM.updateDailyScrum()
                             }
                         }
                     }

@@ -6,13 +6,13 @@ import Foundation
 
 struct DailyScrum: Identifiable {
     let id: UUID
-    var title: String
-    var attendees: [Attendee]
-    var lengthInMinutes: Int
-    var theme: Theme
-    var ironSuit: IronSuit
+    var title: String = ""
+    var attendees: [Attendee] = []
+    var lengthInMinutes: Int = 5
+    var theme: Theme = .seafoam
+    var ironSuit: IronSuit = .MarkXIII
     
-    init(id: UUID = UUID(), title: String, attendees: [String], lengthInMinutes: Int, theme: Theme, ironSuit: IronSuit) {
+    init(id: UUID = UUID(), title: String = "", attendees: [String] = [], lengthInMinutes: Int = 5, theme: Theme = .seafoam, ironSuit: IronSuit = .MarkXIII) {
         self.id = id
         self.title = title
         self.attendees = attendees.map { Attendee(name: $0) }
